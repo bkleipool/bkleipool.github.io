@@ -1,0 +1,22 @@
+body {
+    background-color: yinmn-blue;
+    font-family:Helvetica, Arial, sans-serif;
+}
+
+.header-image {
+    padding: 160px;
+    background-image: url("header.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    background-size: cover;
+  }
+
+/* Columns */
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 50%;
+}
