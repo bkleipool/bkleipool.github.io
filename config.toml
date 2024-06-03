@@ -1,0 +1,37 @@
+# The URL the site will be built for
+base_url = "https://bkleipool.github.io/"
+
+theme = "shadharon"
+
+# Whether to automatically compile all Sass files in the sass directory
+compile_sass = true
+
+# Whether to build a search index to be used later on by a JavaScript library
+build_search_index = false
+
+[markdown]
+# Whether to do syntax highlighting
+# Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
+highlight_code = false
+
+[extra]
+toc = false
+use_cdn = false
+search_bar = false
+
+katex_enable = true
+
+
+# The icon is display besides the menu text but is not necessary. It needs to be placed under "menu_icon" in the static "folder"
+menu = [
+    { name = "📃 Resume", url = "/", weight = 1 },
+    { name = "💡 Projects", url = "/projects", weight = 1},
+    { name = "📚 Articles & Publications", url = "/posts", weight = 1 },
+]
+
+#The icons available can be found in "social_icons" in the "static" folder
+socials = [
+    { name = "github", url = "https://github.com/bkleipool", icon = "github" },
+    { name = "linkedin", url = "https://www.linkedin.com/in/bjorn-kleipool/", icon = "linkedin" },
+    { name = "medium", url = "https://medium.com/@b.kleipool", icon = "medium" },
+]
