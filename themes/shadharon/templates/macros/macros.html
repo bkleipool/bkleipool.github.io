@@ -107,9 +107,9 @@
             {{ post_macros::page_header(title=page.title) }}
 
             <div class="meta">
-                {% if page.date %}
+                <!-- {% if page.date %}
                 Posted on <time>{{ page.date | date(format="%Y-%m-%d") }}</time>
-                {% endif %}
+                {% endif %} -->
 
                 {% if page.draft %}
                 <span class="draft-label">DRAFT</span>
@@ -125,7 +125,7 @@
                     </nav>
                 </div>
                 {% endif %}
-                ||<span> {{ page.reading_time }} minute read</span>
+                <!-- ||<span> {{ page.reading_time }} minute read</span> -->
             </div>
         </div>
 

@@ -1,7 +1,7 @@
 +++
 title = "AI Chess Engine"
 description = "An AI which uses Q-learning and self-play to discover novel chess tactics."
-weight = 2
+weight = 10
 
 [extra]
 local_image = "ai-chess-engine.jpg"

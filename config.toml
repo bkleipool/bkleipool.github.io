@@ -26,7 +26,7 @@ katex_enable = true
 menu = [
     { name = "📃 Resume", url = "/", weight = 1 },
     { name = "💡 Projects", url = "/projects", weight = 1},
-    { name = "📚 Articles & Publications", url = "/posts", weight = 1 },
+    # { name = "📚 Articles & Publications", url = "/posts", weight = 1 },
 ]
 
 #The icons available can be found in "social_icons" in the "static" folder

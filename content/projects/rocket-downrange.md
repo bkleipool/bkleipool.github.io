@@ -39,11 +39,12 @@ The Fokker-Planck PDE can be written in conservative form as:
 $$\frac{\partial P(\mathbf{X}, t)}{\partial t} = \nabla_{\mathbf{x}}^2\left[\tfrac{1}{2}\mathbf{g}^2(\mathbf{X, t})P(\mathbf{X}, t) \right] - \nabla_{\mathbf{x}}\cdot[\mathbf{f}(\mathbf{X}, t)P(\mathbf{X}, t)]$$
 We can derive the finite-volume form of the conservative equation:
 $$
-\int_{\Omega}\frac{\partial P(\mathbf{X}, t)}{\partial t}\,dV = \int_{\Omega}\nabla_{\mathbf{x}}^2\left[\tfrac{1}{2}\mathbf{g}^2(\mathbf{X}, t)P(\mathbf{X}, t) \right]\,dV - \int_{\Omega}\nabla_{\mathbf{x}}\cdot[\mathbf{f}(\mathbf{X}, t)P(\mathbf{X}, t)]\,dV$$
-$$\frac{\partial}{\partial t}\int_{\Omega}P(\mathbf{X}, t)\,dV = \oint_{\partial\Omega}\nabla_{\mathbf{x}}\left[\tfrac{1}{2}\mathbf{g}^2(\mathbf{X}, t)P(\mathbf{X}, t) \right]\cdot d\mathbf{S} - \oint_{\partial\Omega}(\mathbf{f}(\mathbf{X}, t)P(\mathbf{X}, t))\cdot d\mathbf{S}$$
-$$\frac{\partial}{\partial t}\int_{\Omega}P(\mathbf{X}, t)\,dV = \oint_{\partial\Omega}\left(\tfrac{1}{2}\nabla_{\mathbf{x}}\left[\mathbf{g}^2(\mathbf{X}, t)P(\mathbf{X}, t) \right] - \mathbf{f}(\mathbf{X}, t)P(\mathbf{X}, t)\right)\cdot d\mathbf{S}$$
+\int_{\Omega}\frac{\partial P(\mathbf{X}, t)}{\partial t}~dV = \int_{\Omega}\nabla_{\mathbf{x}}^2\left[\tfrac{1}{2}\mathbf{g}^2(\mathbf{X}, t)P(\mathbf{X}, t) \right]~dV - \int_{\Omega}\nabla_{\mathbf{x}}\cdot[\mathbf{f}(\mathbf{X}, t)P(\mathbf{X}, t)]~dV$$
+$$\frac{\partial}{\partial t}\int_{\Omega}P(\mathbf{X}, t)~dV = \oint_{\partial\Omega}\left(\tfrac{1}{2}\nabla_{\mathbf{x}}\left[\mathbf{g}^2(\mathbf{X}, t)P(\mathbf{X}, t) \right] - \mathbf{f}(\mathbf{X}, t)P(\mathbf{X}, t)\right)\cdot d\mathbf{S}$$
 
 In a discrete hypercube in $N$-dimensional state-space ($V$ is the cell volume, $S$ is the area of every wall of the cell):
+$$V\frac{\partial \overline{P}\_{i,j,\dots}}{\partial t}=S\sum_{n=1}^N\left(\frac{1}{2}\frac{\partial}{\partial x_{n}}\left[g^2_{n}(X_{i,j,\dots}, t)\overline{P}\_{i,j,\dots}\right]-f_{n}(X_{i,j,\dots}, t)\overline{P}_{i,j,\dots}\right) $$
 
 Discretizing the spatial derivative as the difference between neighboring volumes:
 
+$$ \overline{P}^{k+1}\_{i} = \overline{P}^{k}\_{i}\left[1 - \frac{S\Delta t}{V}\sum_{n=1}^N\left(g^2_{n}(X_{i}, t) + f_{n}(X_{i}, t)\right)\right] + \frac{S\Delta t}{V}\sum_{n=1}^Ng^2_{n}(X_{i+1}, t)\overline{P}^k_{i+1}$$
