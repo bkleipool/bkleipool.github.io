@@ -8,7 +8,7 @@ weight = 3
 local_image = "monocular-depth-estimation-1.png"
 +++
 
-## Main idea
+## Overview
 The goal of this project was to develop a model that uses a drone's camera to estimate its distance from obstacles, to feed into a path planning algorithm. This project was part of a practical assignment for the Master course [AE4317](https://studiegids.tudelft.nl/courses/study-guide/educations/20834) "Autonomous Flight of Micro Air Vehicles". The core challenge was developing a depth estimation model that could work on a resource-constrained drone without any ground-truth depth data. Traditional approaches either use [stereo cameras](https://doi.org/10.1016/j.neucom.2020.12.089) (which the drone didn't have) or [supervised learning](https://arxiv.org/abs/1901.09402) (which requires labeled depth data we didn't have access to). So we went with an unsupervised approach using a [CNN](https://en.wikipedia.org/wiki/Convolutional_neural_network) to process a single camera feed.
 
 ## Technical details

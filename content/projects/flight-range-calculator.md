@@ -9,7 +9,7 @@ img1 = " flight-range-calculator-2.gif"
 +++
 
 
-## Main idea
+## Overview
 The goal of this project is to get a better understanding of differential geometry and quaternion transformations for 3D graphics.
 The project idea stemmed from a curiosity into how the range polygon of an aircraft would be affected by winds and the curvature of earth.
 The plan was to develop a tool where the user could move a cursor point over the surface of the earth, and a range polygon would appear over that point
@@ -20,14 +20,13 @@ showing the places that the aircraft could reach from that point.
 ## Implementation
 The tool is written with the [Rust](https://www.rust-lang.org/) programming language, using the [egui framework](https://github.com/emilk/egui) as the front-end. This added an extra challenge because egui doesn't have a 3D pipeline, so the 3D view had to be implemented from scratch. The country border data and airport coordinates were found on [Natural Earth Data](https://www.naturalearthdata.com/downloads/). Data on global wind patterns was found in a study by [Kling and Ackerly, 2020](https://www.nature.com/articles/s41558-020-0848-3#Sec20).
 
-The range polygon generator uses a discretised ODE scheme for the [Geodesic Equation](https://en.wikipedia.org/wiki/Geodesic#Affine_geodesics) with varying initial condition to estimate the range boundary. The wind is accounted for by a simple correction $ds'=ds\/(1+w/V)$ where $w$ is the tailwind component and $V$ the cruise velocity. 
+The range polygon generator uses a discretised ODE scheme for the [Geodesic Equation](https://en.wikipedia.org/wiki/Geodesic#Affine_geodesics) with varying initial condition to estimate the range boundary. The wind is accounted for by a simple correction $ds'=ds/(1+w/V)$ where $w$ is the tailwind component and $V$ the cruise velocity. 
 
 <img src="/flight-range-calculator-2.gif" alt="drawing" width="430"/>
 <img src="/flight-range-calculator-3.gif" alt="drawing" width="430"/>
 
 
 ## Techincal details
-### Geodesic calculation
 We define a Lat/lon-coordinate system on the unit sphere where $\theta\in[-\pi, \pi]$ and $\phi \in \left[ -\frac{\pi}{2}, \frac{\pi}{2} \right]$:
 $$
 \begin{aligned} x &= \cos \theta \cos \phi \\\ y &= \sin \theta \cos \phi \\\ z &= \sin \phi \end{aligned}
