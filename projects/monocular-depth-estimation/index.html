@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+    <link rel="stylesheet" href="https://bkleipool.github.io/css/katex.css">
+        <script defer src="https://bkleipool.github.io/js/katex.js"></script>
+        <script defer src="https://bkleipool.github.io/js/auto-render.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    ],
+                    throwOnError: true
+                });
+            });
+        </script>
+    
+        <!-- <link rel="stylesheet" href="https://bkleipool.github.io/css/katex.min.css">
+        <script defer src="https://bkleipool.github.io/js/katex.min.js"></script>
+        <script defer src="https://bkleipool.github.io/js/mathtex-script-type.min.js"></script>
+        <script defer src="https://bkleipool.github.io/js/auto-render.min.js" onload="renderMathInElement(document.body);"></script> -->
+
+
+
+
+    
+    
+    
+    <title>
+        Monocular Depth Estimation
+    </title>
+    
+
+    
+    
+
+
+
+    
+    <link rel="alternate" type="application/atom+xml" title="" href="https://bkleipool.github.io/ atom.xml">
+    <link rel="stylesheet" type="text/css" media="screen" href=https://bkleipool.github.io/main.css />
+
+    
+
+
+    <meta name="description" content="">
+
+    <meta name="description" content="">
+    
+    <meta name="robots" content="index, nofollow">
+    
+
+    <meta property="og:title" content="">
+    <meta property="og:type" content="article" />
+
+    
+
+    
+    <meta property="og:url" content="https:&#x2F;&#x2F;bkleipool.github.io&#x2F;projects&#x2F;monocular-depth-estimation&#x2F;">
+    
+    <meta property="og:description" content="">
+    <meta property="og:site_name" content="">
+
+    <meta http-equiv="Content-Security-Policy" 
+    content="default-src 'self' ws://127.0.0.1:1024/; img-src 'self' https://*; script-src 'self'; style-src 'self'; font-src 'self'" />
+</head>
+
+<body>
+    <header>
+    <div class="navbar">
+        <div class="nav-title nav-navs">
+            <a class="nav-links home-title" href=https:&#x2F;&#x2F;bkleipool.github.io&#x2F;></a>
+        </div>
+        <nav class="nav-title nav-navs">
+            
+            <a class="nav-links" href=&#x2F;>
+                📃 Resume</a>
+            
+            <a class="nav-links" href=&#x2F;projects>
+                💡 Projects</a>
+            
+        </nav>
+        
+
+        <nav class="socials nav-navs">
+            <!-- <label class="theme-switcher" for="themeswitch">
+                <div class="background"></div>
+                <input type="checkbox" id="themeswitch">
+                <div class="switch">
+                    <img alt = "theme switch to dark" class="moon" src="/menu_icon/moon.png">
+                    <img alt = "theme switch to light" class="sun" src="/menu_icon/sun.png">
+                </div>
+            </label> -->
+        </nav>
+        
+    </div>
+</header>
+
+    <div class="content">
+        
+        
+    
+<main>
+    <article>
+        <div class="title">
+            
+            
+<h2>
+    Monocular Depth Estimation
+</h2>
+
+
+            <div class="meta">
+                <!--  -->
+
+                
+
+                
+                <!-- ||<span> 3 minute read</span> -->
+            </div>
+        </div>
+
+        
+
+        
+        
+
+        <hr class="separator">
+
+        <section class="body">
+            <h2 id="overview">Overview</h2>
+<p>The goal of this project was to develop a model that uses a drone's camera to estimate its distance from obstacles, to feed into a path planning algorithm. This project was part of a practical assignment for the Master course <a href="https://studiegids.tudelft.nl/courses/study-guide/educations/20834">AE4317</a> &quot;Autonomous Flight of Micro Air Vehicles&quot;. The core challenge was developing a depth estimation model that could work on a resource-constrained drone without any ground-truth depth data. Traditional approaches either use <a href="https://doi.org/10.1016/j.neucom.2020.12.089">stereo cameras</a> (which the drone didn't have) or <a href="https://arxiv.org/abs/1901.09402">supervised learning</a> (which requires labeled depth data we didn't have access to). So we went with an unsupervised approach using a <a href="https://en.wikipedia.org/wiki/Convolutional_neural_network">CNN</a> to process a single camera feed.</p>
+<h2 id="technical-details">Technical details</h2>
+<p>There are 2 main insights that underlie the unsupervised training method for a depth estimation CNN. The first is that two nearby video frames from the drone’s camera taken at known locations are related to each other by the depth map. The depth map explains the parallax between the frames (aside from possible occlusions). The second insight is that in a static environment, two nearby video frames from the drone’s camera at different points in time can be considered as two different cameras at the same point in time. With this, possible environmental changes between frames can be neglected.</p>
+<p>To assess the accuracy of the CNN-generated depth map without ground-truth data, we used the following method. First, two nearby video frames are taken from the training set $\mathbf{I}_i$ and $\mathbf{I}_j$ at known positions $\mathbf{x}_i$ and $\mathbf{x}_j$. Then, the CNN is run on $\mathbf{I}_i$ to obtain a depth map estimate $\widehat{\mathbf{D}}_i$. Then, $\mathbf{x}_i$, $\mathbf{I}_i$ and $\widehat{\mathbf{D}}_i$ are taken to project the image into 3D-space, giving each pixel in the frame a 3D coordinate (left diagram). Then, the 3D coordinates are reprojected into the 2D focal plane at $\mathbf{x}_j$, which results in a reconstruction $\hat{\mathbf{I}}_j$. Finally, the difference between $\mathbf{I}_i$ and $\hat{\mathbf{I}}_j$ is proportional to the accuracy of $\widehat{\mathbf{D}}_i$ with respect to the (unkown) ground-truth depth map $\mathbf{D}_i$ (right diagram).</p>
+<p><img src="/monocular-depth-estimation-2.png" alt="drawing" width="430"/> <!-- Diagram explaining the projection method -->
+<img src="/monocular-depth-estimation-1.png" alt="drawing" width="430"/> <!-- Diagram explaining the model architecture & training method --></p>
+<p>The depth reconstruction method has many advantages for our application, since it doesn't need multiple cameras or ground-truth training data, and it's very generalizable across different environments. However, we did encounter some difficulties. Firstly, the projection uses a ray-tracing algorithm, which does not provide a differentiable output. So, the training loop cannot use gradient descent to train the model, and has to use gradient-free alternatives like Simulated Annealing in our case. This makes the training process for even a small CNN very computationally intensive. Secondly, the drone’s camera uses a wide-angle lens which creates significant barrel distortions, so the pinhole-camera approximation that the projection uses is less accurate.</p>
+
+        </section>
+
+    </article>
+</main>
+
+
+    </div>
+
+    <footer>
+    <section>
+        <nav>
+            
+            <a rel="noopener noreferrer" target="_blank" class="nav-links social" href="https:&#x2F;&#x2F;github.com&#x2F;bkleipool">
+                <img alt="github" title="github" src="/social_icons/github.svg">
+            </a>
+            
+            <a rel="noopener noreferrer" target="_blank" class="nav-links social" href="https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;bjorn-kleipool&#x2F;">
+                <img alt="linkedin" title="linkedin" src="/social_icons/linkedin.svg">
+            </a>
+            
+            <a rel="noopener noreferrer" target="_blank" class="nav-links social" href="https:&#x2F;&#x2F;medium.com&#x2F;@b.kleipool">
+                <img alt="medium" title="medium" src="/social_icons/medium.svg">
+            </a>
+            
+            
+        </nav>
+        <nav>
+            <span className="desktop-only">© 2025 Björn Kleipool </span>
+        </nav>
+    </section>
+    <!-- <script src="https://bkleipool.github.io/js/main.js"/></script> -->
+</footer>
+
+</body>
+
+</html>

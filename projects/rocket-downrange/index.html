@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+    <link rel="stylesheet" href="https://bkleipool.github.io/css/katex.css">
+        <script defer src="https://bkleipool.github.io/js/katex.js"></script>
+        <script defer src="https://bkleipool.github.io/js/auto-render.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    ],
+                    throwOnError: true
+                });
+            });
+        </script>
+    
+        <!-- <link rel="stylesheet" href="https://bkleipool.github.io/css/katex.min.css">
+        <script defer src="https://bkleipool.github.io/js/katex.min.js"></script>
+        <script defer src="https://bkleipool.github.io/js/mathtex-script-type.min.js"></script>
+        <script defer src="https://bkleipool.github.io/js/auto-render.min.js" onload="renderMathInElement(document.body);"></script> -->
+
+
+
+
+    
+    
+    
+    <title>
+        Rocket Trajectory Prediction
+    </title>
+    
+
+    
+    
+
+
+
+    
+    <link rel="alternate" type="application/atom+xml" title="" href="https://bkleipool.github.io/ atom.xml">
+    <link rel="stylesheet" type="text/css" media="screen" href=https://bkleipool.github.io/main.css />
+
+    
+
+
+    <meta name="description" content="">
+
+    <meta name="description" content="">
+    
+    <meta name="robots" content="index, nofollow">
+    
+
+    <meta property="og:title" content="">
+    <meta property="og:type" content="article" />
+
+    
+
+    
+    <meta property="og:url" content="https:&#x2F;&#x2F;bkleipool.github.io&#x2F;projects&#x2F;rocket-downrange&#x2F;">
+    
+    <meta property="og:description" content="">
+    <meta property="og:site_name" content="">
+
+    <meta http-equiv="Content-Security-Policy" 
+    content="default-src 'self' ws://127.0.0.1:1024/; img-src 'self' https://*; script-src 'self'; style-src 'self'; font-src 'self'" />
+</head>
+
+<body>
+    <header>
+    <div class="navbar">
+        <div class="nav-title nav-navs">
+            <a class="nav-links home-title" href=https:&#x2F;&#x2F;bkleipool.github.io&#x2F;></a>
+        </div>
+        <nav class="nav-title nav-navs">
+            
+            <a class="nav-links" href=&#x2F;>
+                📃 Resume</a>
+            
+            <a class="nav-links" href=&#x2F;projects>
+                💡 Projects</a>
+            
+        </nav>
+        
+
+        <nav class="socials nav-navs">
+            <!-- <label class="theme-switcher" for="themeswitch">
+                <div class="background"></div>
+                <input type="checkbox" id="themeswitch">
+                <div class="switch">
+                    <img alt = "theme switch to dark" class="moon" src="/menu_icon/moon.png">
+                    <img alt = "theme switch to light" class="sun" src="/menu_icon/sun.png">
+                </div>
+            </label> -->
+        </nav>
+        
+    </div>
+</header>
+
+    <div class="content">
+        
+        
+    
+<main>
+    <article>
+        <div class="title">
+            
+            
+<h2>
+    Rocket Trajectory Prediction
+</h2>
+
+
+            <div class="meta">
+                <!--  -->
+
+                
+
+                
+                <!-- ||<span> 5 minute read</span> -->
+            </div>
+        </div>
+
+        
+
+        
+        
+
+        <hr class="separator">
+
+        <section class="body">
+            <h2 id="overview">Overview</h2>
+<p>The goal of this project was to learn more about the applications of statistical mechanics and numerical schemes for partial differential equations. 
+The idea started as a personal side-project when working on the DARE rocket simulation software for the Stratos V rocket.
+The main idea is that instead of running millions of simulations of the dynamics of a rocket, each with varying initial conditions and noise, we run a single simulation of the probability distribution of states over time. This could be used for apogee or landing zone prediction of a rocket under different conditions.</p>
+<img src="/rocket-downrange-2.png" alt="drawing" width="430"/>
+<img src="/rocket-downrange-1.png" alt="drawing" width="430"/>
+<h2 id="technical-details">Technical Details</h2>
+<p>In a rocket trajectory simulation, you're essentially doing a &quot;particle&quot; simulation of a discrete number of particles to know where they may end up after a certain time. You could do this in a continuum by propagating a probability distribution of where the particle could be over time. The dynamics of the distribution is governed by the <a href="https://en.wikipedia.org/wiki/Fokker%E2%80%93Planck_equation">Fokker-Planck Equation</a>.</p>
+<h3 id="pde-derivation">PDE Derivation</h3>
+<p>The dynamics of a rocket with an $n$-dimensional state vector $\mathbf{X}$ is governed by the differential equation:
+$$\dot{\mathbf{X}}=\mathbf{f}(\mathbf{X}, t)  \qquad (1)$$
+Where $\mathbf{f}(\mathbf{X}, t)$ is the deterministic system evolution function. Then, by introducing noise (wind gusts, etc.) in the form of a $n$-dimensional <a href="https://en.wikipedia.org/wiki/Wiener_process">Wiener process</a> $\mathbf{W}$, we get a stochastic differential equation of the state vector:
+$$d\mathbf{X}=\mathbf{f}(\mathbf{X}, t)dt + \mathbf{g}(\mathbf{X}, t)\odot d\mathbf{W} \qquad (2)$$
+Where $\mathbf{g}(\mathbf{X}, t)$ is the stochastic system evolution function and $\odot$ denotes the elementwise product. Applying the Fokker-Planck equation to $(2)$:
+$$\frac{\partial P(\mathbf{X}, t)}{\partial t} =-\frac{\partial}{\partial \mathbf{X}}\left[\mathbf{f}(\mathbf{X}, t)P(\mathbf{X}, t)\right] + \frac{\partial^2}{\partial \mathbf{X}^2}\left[\frac{1}{2}\mathbf{g}^2(\mathbf{X}, t)P(\mathbf{X}, t)\right]$$
+We get a partial differential equation in terms of the probability distribution $P(\mathbf{X}, t)$.</p>
+<h3 id="finite-volume-discretisation">Finite Volume Discretisation</h3>
+<p>We discretise the computational domain into small volumes, and reformulate the dynamics in terms of the probability contained within the volume and how much &quot;flows&quot; out via the boundaries, similar to a <a href="https://en.wikipedia.org/wiki/Finite_volume_method">finite volume method</a> in fluid dyamics. The insight here is that probability is conserved between volumes. Conservation of probability means that each discrete state-space volume $\Omega$ has a time-change in probability equal to the probability flux $\mathbf{J}(\mathbf{X}, t)$ along the boundary $\partial \Omega$:
+$$
+\frac{\partial}{\partial t} \int_{\Omega} P(\mathbf{X}, t),dV=-\oint_{\partial\Omega} \mathbf{J}(\mathbf{X}, t)\cdot d\mathbf{S}$$
+To make our dynamics fit this form, we rewrite The Fokker-Planck PDE in conservative form:
+$$\frac{\partial P(\mathbf{X}, t)}{\partial t} = \nabla_{\mathbf{x}}^2\left[\tfrac{1}{2}\mathbf{g}^2(\mathbf{X, t})P(\mathbf{X}, t) \right] - \nabla_{\mathbf{x}}\cdot[\mathbf{f}(\mathbf{X}, t)P(\mathbf{X}, t)]$$
+We can derive the integral form of the conservative equation using the <a href="https://en.wikipedia.org/wiki/Divergence_theorem">Divergence Theorem</a>:
+$$
+\int_{\Omega}\frac{\partial P(\mathbf{X}, t)}{\partial t}~dV = \int_{\Omega}\nabla_{\mathbf{x}}^2\left[\tfrac{1}{2}\mathbf{g}^2(\mathbf{X}, t)P(\mathbf{X}, t) \right]~dV - \int_{\Omega}\nabla_{\mathbf{x}}\cdot[\mathbf{f}(\mathbf{X}, t)P(\mathbf{X}, t)]~dV$$
+$$\frac{\partial}{\partial t}\int_{\Omega}P(\mathbf{X}, t)~dV = \oint_{\partial\Omega}\left(\tfrac{1}{2}\nabla_{\mathbf{x}}\left[\mathbf{g}^2(\mathbf{X}, t)P(\mathbf{X}, t) \right] - \mathbf{f}(\mathbf{X}, t)P(\mathbf{X}, t)\right)\cdot d\mathbf{S} \qquad (3)$$</p>
+<p>Then, we can apply equation $(3)$ to a discrete hypercube in $N$-dimensional state-space (with volume $V$ and wall area $S$). This gives an equation relating the volume-average probability $\overline{P}_{i,j,\dots}$ of a discrete hypercube to the flux across its walls:
+$$V\frac{\partial \overline{P}_{i,j,\dots}}{\partial t}=S\sum_{n=1}^N\left(\frac{1}{2}\frac{\partial}{\partial x_{n}}\left[g^2_{n}(X_{i,j,\dots}, t)\overline{P}_{i,j,\dots}\right]-f_{n}(X_{i,j,\dots}, t)\overline{P}_{i,j,\dots}\right) $$</p>
+<p>Discretizing the spatial derivative as the difference between neighboring volumes:</p>
+<p>$$ \overline{P}^{k+1}_{i} = \overline{P}^{k}_{i}\left[1 - \frac{S\Delta t}{V}\sum_{n=1}^N\left(g^2_{n}(X_{i}, t) + f_{n}(X_{i}, t)\right)\right] + \frac{S\Delta t}{V}\sum_{n=1}^Ng^2_{n}(X_{i+1}, t)\overline{P}^k_{i+1}$$</p>
+<h2 id="limitations">Limitations</h2>
+<p>From preliminary verification, it became clear that the memory requirements of a simulation would grow exponentially with the dimensionality of the state space, making 3D rigid body simulations computationally intractible. Still, it was a great learning experience.</p>
+
+        </section>
+
+    </article>
+</main>
+
+
+    </div>
+
+    <footer>
+    <section>
+        <nav>
+            
+            <a rel="noopener noreferrer" target="_blank" class="nav-links social" href="https:&#x2F;&#x2F;github.com&#x2F;bkleipool">
+                <img alt="github" title="github" src="/social_icons/github.svg">
+            </a>
+            
+            <a rel="noopener noreferrer" target="_blank" class="nav-links social" href="https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;bjorn-kleipool&#x2F;">
+                <img alt="linkedin" title="linkedin" src="/social_icons/linkedin.svg">
+            </a>
+            
+            <a rel="noopener noreferrer" target="_blank" class="nav-links social" href="https:&#x2F;&#x2F;medium.com&#x2F;@b.kleipool">
+                <img alt="medium" title="medium" src="/social_icons/medium.svg">
+            </a>
+            
+            
+        </nav>
+        <nav>
+            <span className="desktop-only">© 2025 Björn Kleipool </span>
+        </nav>
+    </section>
+    <!-- <script src="https://bkleipool.github.io/js/main.js"/></script> -->
+</footer>
+
+</body>
+
+</html>

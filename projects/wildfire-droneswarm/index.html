@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+    <link rel="stylesheet" href="https://bkleipool.github.io/css/katex.css">
+        <script defer src="https://bkleipool.github.io/js/katex.js"></script>
+        <script defer src="https://bkleipool.github.io/js/auto-render.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    ],
+                    throwOnError: true
+                });
+            });
+        </script>
+    
+        <!-- <link rel="stylesheet" href="https://bkleipool.github.io/css/katex.min.css">
+        <script defer src="https://bkleipool.github.io/js/katex.min.js"></script>
+        <script defer src="https://bkleipool.github.io/js/mathtex-script-type.min.js"></script>
+        <script defer src="https://bkleipool.github.io/js/auto-render.min.js" onload="renderMathInElement(document.body);"></script> -->
+
+
+
+
+    
+    
+    
+    <title>
+        Wildfire Drone Swarm
+    </title>
+    
+
+    
+    
+
+
+
+    
+    <link rel="alternate" type="application/atom+xml" title="" href="https://bkleipool.github.io/ atom.xml">
+    <link rel="stylesheet" type="text/css" media="screen" href=https://bkleipool.github.io/main.css />
+
+    
+
+
+    <meta name="description" content="">
+
+    <meta name="description" content="">
+    
+    <meta name="robots" content="index, nofollow">
+    
+
+    <meta property="og:title" content="">
+    <meta property="og:type" content="article" />
+
+    
+
+    
+    <meta property="og:url" content="https:&#x2F;&#x2F;bkleipool.github.io&#x2F;projects&#x2F;wildfire-droneswarm&#x2F;">
+    
+    <meta property="og:description" content="">
+    <meta property="og:site_name" content="">
+
+    <meta http-equiv="Content-Security-Policy" 
+    content="default-src 'self' ws://127.0.0.1:1024/; img-src 'self' https://*; script-src 'self'; style-src 'self'; font-src 'self'" />
+</head>
+
+<body>
+    <header>
+    <div class="navbar">
+        <div class="nav-title nav-navs">
+            <a class="nav-links home-title" href=https:&#x2F;&#x2F;bkleipool.github.io&#x2F;></a>
+        </div>
+        <nav class="nav-title nav-navs">
+            
+            <a class="nav-links" href=&#x2F;>
+                📃 Resume</a>
+            
+            <a class="nav-links" href=&#x2F;projects>
+                💡 Projects</a>
+            
+        </nav>
+        
+
+        <nav class="socials nav-navs">
+            <!-- <label class="theme-switcher" for="themeswitch">
+                <div class="background"></div>
+                <input type="checkbox" id="themeswitch">
+                <div class="switch">
+                    <img alt = "theme switch to dark" class="moon" src="/menu_icon/moon.png">
+                    <img alt = "theme switch to light" class="sun" src="/menu_icon/sun.png">
+                </div>
+            </label> -->
+        </nav>
+        
+    </div>
+</header>
+
+    <div class="content">
+        
+        
+    
+<main>
+    <article>
+        <div class="title">
+            
+            
+<h2>
+    Wildfire Drone Swarm
+</h2>
+
+
+            <div class="meta">
+                <!--  -->
+
+                
+
+                
+                <!-- ||<span> 3 minute read</span> -->
+            </div>
+        </div>
+
+        
+
+        
+        
+
+        <hr class="separator">
+
+        <section class="body">
+            <h2 id="overview">Overview</h2>
+<p>The goal of this project was to develop a path planning algorithm for a drone swarm, such that it would be able to detect emerging wildfires efficiently. This project was part of my <a href="https://bkleipool.github.io/projects/wildfire-droneswarm/repository.tudelft.nl/record/uuid:567daee3-7a96-4441-b0e3-c39d98b0fbb6">Bachelor's Thesis Project</a>. The main idea was that a swarm of drones equipped with cameras and other sensors would fly over a large area and continuously monitor the wildfire risk, continuously updating the paths such that the highest-risk areas are checked most often.</p>
+<h2 id="technical-details">Technical details</h2>
+<p>The search area is divided into grid cells, where each grid cells risk will be individually measured by the drones (or estimated from external sources for the initial deployment). Then each grid cell is assigned a sector, where each sector is monitored by one drone. Each drone will then trace a pre-defined path through each sector. The reason that only one drone is allowed in each sector is to ensure that the drones do not collide with each other, even in extreme conditions (e.g. thick smoke) where communication may be lost. </p>
+<img src="/wildfire-drone-swarm-1.png" alt="drawing" width="860"/>
+<p>Within this framework, the main ways to optimise the monitoring are to optimise the sector divisions and to optimise the paths. I decided to limit the scope to only optimising the sector divisions. I wanted the sectors to be divided such that the aggregated risk is the most evenly distributed over the sectors. Mathematically, this meant that every cell in the search area $C_i\in \Omega$ is assigned to one of $K$ sectors $S_0, S_1, \ldots, S_K\in \mathcal{S}$ such that:
+$$
+\begin{aligned} S_0, S_1,\ldots,S_K &amp;= \underset{\mathcal{S}}{\text{argmin}}\left\{ \sum_{s_i\in\mathcal{S}}\left[\sum_{C_j\in s_i} R(C_j) -\frac{1}{K}\sum_{C_l\in \Omega} R(C_l) \right]^2 \right\} \\ &amp;= \underset{\mathcal{S}}{\text{argmin}}\left\{ \sum_{s_i\in\mathcal{S}}\left(R_{s_{i}} -\overline{R}_{\Omega} \right)^2 \right\} \end{aligned}
+$$
+Where $R: \Omega \to [0, 1]$ is the imperical risk map, $R_{s_i}$ is the cumulative risk of sector $s_i$ and $\overline{R}_\Omega$ is the average cumulative risk of the whole search area. Computationally, this condition was optimised by generating a large amount of candidate sector divisions and selecting the one that achieved the lowest value of the objective function. The candidate sector divisions were created with a <a href="https://en.wikipedia.org/wiki/Voronoi_diagram">Voronoi tesselation</a>, where the generator points are sampled from the risk map using <a href="https://en.wikipedia.org/wiki/Inverse_transform_sampling">Inverse transform sampling</a>. This has the effect of naturally reducing the sector size in high-risk areas. </p>
+<img src="/wildfire-drone-swarm-2.png" alt="drawing" width="563"/>
+<img src="/wildfire-drone-swarm-3.gif" alt="drawing" width="297"/>
+<p>From this project I learned a lot about swarm planning, gradient-free optimisation and even graph theory. I am satisfied with the results of the project, but I am curious to explore this more. For example what would happen if the paths are also optimised, or if there is an alternative to sectors that still ensures that no drone collisions will occur.</p>
+
+        </section>
+
+    </article>
+</main>
+
+
+    </div>
+
+    <footer>
+    <section>
+        <nav>
+            
+            <a rel="noopener noreferrer" target="_blank" class="nav-links social" href="https:&#x2F;&#x2F;github.com&#x2F;bkleipool">
+                <img alt="github" title="github" src="/social_icons/github.svg">
+            </a>
+            
+            <a rel="noopener noreferrer" target="_blank" class="nav-links social" href="https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;bjorn-kleipool&#x2F;">
+                <img alt="linkedin" title="linkedin" src="/social_icons/linkedin.svg">
+            </a>
+            
+            <a rel="noopener noreferrer" target="_blank" class="nav-links social" href="https:&#x2F;&#x2F;medium.com&#x2F;@b.kleipool">
+                <img alt="medium" title="medium" src="/social_icons/medium.svg">
+            </a>
+            
+            
+        </nav>
+        <nav>
+            <span className="desktop-only">© 2025 Björn Kleipool </span>
+        </nav>
+    </section>
+    <!-- <script src="https://bkleipool.github.io/js/main.js"/></script> -->
+</footer>
+
+</body>
+
+</html>

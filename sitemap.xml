@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://bkleipool.github.io/</loc>
+    </url>
+    <url>
+        <loc>https://bkleipool.github.io/posts/</loc>
+    </url>
+    <url>
+        <loc>https://bkleipool.github.io/posts/markdown/</loc>
+        <lastmod>2022-01-01</lastmod>
+    </url>
+    <url>
+        <loc>https://bkleipool.github.io/posts/page/1/</loc>
+    </url>
+    <url>
+        <loc>https://bkleipool.github.io/posts/toc/</loc>
+        <lastmod>2022-01-02</lastmod>
+    </url>
+    <url>
+        <loc>https://bkleipool.github.io/projects/</loc>
+    </url>
+    <url>
+        <loc>https://bkleipool.github.io/projects/flight-range-calculator/</loc>
+    </url>
+    <url>
+        <loc>https://bkleipool.github.io/projects/monocular-depth-estimation/</loc>
+    </url>
+    <url>
+        <loc>https://bkleipool.github.io/projects/rocket-downrange/</loc>
+    </url>
+    <url>
+        <loc>https://bkleipool.github.io/projects/wildfire-droneswarm/</loc>
+    </url>
+</urlset>
